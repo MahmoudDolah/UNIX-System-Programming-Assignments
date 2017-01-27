@@ -1,7 +1,10 @@
-FLAGS = -Wall -std=c99 -o life
+#Makefile
+FLAGS = -std=c99 -Wall
 
-all: 
-    gcc life.c ${FLAGS}
+all: life
+
+life: life.c
+	gcc ${FLAGS} -o life life.c
 
 clean:
-    rm life
+	rm -f life core
