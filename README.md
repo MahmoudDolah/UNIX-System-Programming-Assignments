@@ -1,4 +1,4 @@
-# Game-Of-Life
+# UNIX-System-Programming-Assignments
 Unfortunately, my implementation does not work.
 
 ## My Approach            
