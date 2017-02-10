@@ -1,10 +1,12 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<unistd.h>
 
 extern char** environ;
 
 void display();
+void displayChanges(char* commands);
 
 int main (int argc, char* argv[]){
     //char* nameVal;
@@ -38,14 +40,14 @@ int main (int argc, char* argv[]){
         nameval[j] = argv[i];
         j++;
     }
+    if (endNameVal < argc){
+        isCommand == 1;
+    }
     char* commands[argc - (endNameVal-1)];
     int k = 0;
     for (int i = (endNameVal-1); i < argc; i++){
         commands[k] = argv[i];
         k++;
-    }
-    if (k > 0){
-        isCommand = 1;
     }
     /*
     printf("startNameVal: %d, endNameVal: %d\n", startNameVal, endNameVal);
@@ -66,10 +68,16 @@ int main (int argc, char* argv[]){
         printf("%s\n", commands[i]);
     }
     */
-    if ((iFlag == 0) & (isCommand == 0)){
+    if ((iFlag == 0) && (isCommand == 0)){
         display();
     }
+    else if ((iFlag == 0) && (isCommand == 1)) {
+        displayChanges(commands);
+    }
+}
 
+void displayChanges(char* commands){
+    execv(commands);
 }
 
 void display(){
