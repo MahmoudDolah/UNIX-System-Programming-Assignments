@@ -98,11 +98,7 @@ void runCommand(char** commands){
 }
 
 void display(){
-    for (char* c = *environ; c; c = *++environ){
-        puts(c);
-    }
-    /*
     for (int i = 0; environ[i] != NULL; ++i){
         puts(environ[i]);
-    }*/
+    }
 }
