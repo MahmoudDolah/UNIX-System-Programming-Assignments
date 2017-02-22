@@ -4,52 +4,47 @@
 #include<unistd.h>
 
 extern const char** environ;
-//extern char * const environ;
-
 
 void display();
 void runCommand(char** commands);
+void replaceEnviron(char** commands, char** nameVal);
 
 int main (int argc, char* argv[]){
-    //char* nameVal;
-    //char* cmd[5];
-    //char* arg[5];
     int startNameVal = 1;
-    int endNameVal = 2;
+    int endNameVal = 1;
     int iFlag = 0;
     int isCommand = 0;
     int enter = 0;
-    int startCommands = 1;
+    if (argc == 1){
+        display();
+        exit(0);
+    }
+    if (strcmp(argv[1], "-i") == 0){
+        iFlag = 1;
+        startNameVal = 2;
+        endNameVal = 2;
+    }
     for (int i = 1; i < argc; i++){
-        if (strcmp(argv[i-1], "-i") == 0){
-            iFlag = 1;
-        }
         if ((iFlag == 1) & (enter == 0)){
-            startNameVal = i;
             enter = 1;
         }
-        else if (iFlag == 1){
+        else{
             endNameVal = i;
             if (strpbrk(argv[endNameVal], "=") != 0){
-                //argv[j];
                 endNameVal++; // Count total number of commands
-                // Causes seg fault bc checks over edge
             }
-            startCommands = endNameVal;
         }
     }
-    char* nameval[(endNameVal)-startNameVal];
-    int j = 0;
-    for (int i = startNameVal; i < endNameVal-1; i++){
-        nameval[j] = argv[i];
-        j++;
+    char* nameVal[(endNameVal+1)-startNameVal];
+    int numNameVal = 0;
+    for (int i = startNameVal; i < endNameVal; i++){
+        nameVal[numNameVal] = argv[i];
+        numNameVal++;
     }
-    /*if (endNameVal < argc){
-        isCommand == 1;
-    }*/
-    char* commands[argc - (endNameVal-1)];
+    nameVal[numNameVal] = NULL;
+    char* commands[argc - endNameVal];
     int k = 0;
-    for (int i = (endNameVal-1); i < argc; i++){
+    for (int i = endNameVal; i < argc; i++){
         commands[k] = argv[i];
         k++;
     }
@@ -57,26 +52,6 @@ int main (int argc, char* argv[]){
         isCommand = 1;
     }
 
-    printf("startNameVal: %d, endNameVal: %d\n", startNameVal, endNameVal);
-    printf("All of argv\n");
-    for (int i = 0; i < argc; i++){
-        printf("%s\n", argv[i]);
-    }
-    /*printf("Just path part of argv\n");
-    for (int i = (startNameVal-1); i < endNameVal; i++){
-        printf("%s\n", argv[i]);
-    }
-    printf("nameval array\n");
-    for (int i = 0; i < (endNameVal - startNameVal); i++){
-        printf("%s\n", nameval[i]);
-    }*/
-    printf("commands array\n");
-    for (int i = 0; i < k; i++){
-        printf("%s\n", commands[i]);
-    }
-
-    printf("iFlag: %d\n", iFlag);
-    printf("isCommand: %d\n", isCommand);
     if ((iFlag == 0) && (isCommand == 0)){
         display();
     }
@@ -84,17 +59,41 @@ int main (int argc, char* argv[]){
         runCommand(commands);
     }
     else if ((iFlag == 1) && (isCommand == 1)){
+        replaceEnviron(commands, nameVal);
+    }
+}
+/*
+void addToEnviron(char** commands, char** nameVal, int numNameVal){
+    char* envName;
+    char* envVal;
+    char* name;
+    char* val;
+    int overwrite = 0;
+    for (int i = 0; environ[i] != NULL; ++i){
+        for (int j = 0; j < numNameVal; ++j){
+            envName = strtok(environ[i], "=");
+            val = strtok(nameVal[i], "=");
+            envName = strtok(environ[i], "=");
+            val = strtok(nameVal[i], "=");
+            if (strcmp(val, envName)){
+                if (strcmp(envVal, val)){
 
+                }
+            }
+        }
+    }
+}
+*/
+void replaceEnviron(char** commands, char** nameVal){
+    if (execvp(*commands, nameVal) < 0){
+        perror("execvp in replaceEnviron() function failed\n");
     }
 }
 
 void runCommand(char** commands){
-    //execv(commands);
     if (execvp(*commands, environ) < 0){
-        //printf("execvp failed\n");
-        perror("execvp failed\n");
+        perror("execvp in runCommand() function failed\n");
     }
-
 }
 
 void display(){
