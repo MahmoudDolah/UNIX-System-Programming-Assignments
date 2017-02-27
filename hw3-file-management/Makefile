@@ -1,5 +1,5 @@
 #Makefile
-FLAGS = -std=c99 -Wall
+FLAGS = -Wall
 
 all: du du_nftw
 
