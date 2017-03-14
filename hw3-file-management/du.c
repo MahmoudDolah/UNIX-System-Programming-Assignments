@@ -11,7 +11,7 @@
 #define PATH_MAX_LENGTH 4096
 #define VISITED_INODE_SIZE 4096
 
-int isInInodesArray(ino_t inode, ino_t *visitedInodes, int length);
+int isVisitedInode(ino_t inode, ino_t *visitedInodes, int length);
 int getDiskSpaceFiles(char *directoryPath, DIR *dirp, char *fullPath, char *childPath, ino_t **visitedInodes, int *lastUsedInodeIndex, int visitedInodesLength);
 int getDiskSpaceDirectories(char *directoryPath, DIR *dirp, char *fullPath, char *childPath, ino_t **visitedInodes, int *lastUsedInodeIndex, int visitedInodesLength);
 int getDiskSpace(char *directoryPath, ino_t **visitedInodes, int *lastUsedInodeIndex, int visitedInodesLength);
@@ -100,7 +100,7 @@ int getDiskSpaceFiles(char *directoryPath, DIR *dirp, char *fullPath, char *chil
 
 			if (dirstat.st_nlink == 1) {
 				total += size;
-			} else if (isInInodesArray(dirstat.st_ino, *visitedInodes, visitedInodesLength) == 0) {
+			} else if (isVisitedInode(dirstat.st_ino, *visitedInodes, visitedInodesLength) == 0) {
 				total += size;
 				if (*lastUsedInodeIndex == visitedInodesLength) {
 					perror("Did not account for all inodes");
@@ -154,7 +154,7 @@ int getDiskSpaceDirectories(char *directoryPath, DIR *dirp, char *fullPath, char
 	return total;
 }
 
-int isInInodesArray(ino_t inode, ino_t *visitedInodes, int length) {
+int isVisitedInode(ino_t inode, ino_t *visitedInodes, int length) {
 	/*
 	Checks to see if the specified inode has been visited
 	*/
