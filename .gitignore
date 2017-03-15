@@ -33,3 +33,6 @@
 *.su
 
 core
+hw3-file-management/duOld.c
+hw3-file-management/du_Rafi.c
+hw3-file-management/ex.c
