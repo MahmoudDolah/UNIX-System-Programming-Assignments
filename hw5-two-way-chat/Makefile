@@ -1,5 +1,5 @@
 #Makefile
-flags = -std=c99 -Wall -01
+FLAGS = -std=c99 -Wall
 
 all: client server
 
