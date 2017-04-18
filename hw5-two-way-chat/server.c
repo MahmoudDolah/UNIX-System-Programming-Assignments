@@ -14,7 +14,8 @@
 #define PORTNO 13000
 
 int setupServer(int portnum);
-void sendMessage(int sockfd, char* buffer);
+void writeMessage(int sockfd, char* buffer);
+void readMessage(int sockfd, char* buffer);
 void setupChat(int clientSockfd);
 
 int main(int argc, char *argv[]){
@@ -41,27 +42,27 @@ int main(int argc, char *argv[]){
 
 void setupChat(int clientSockfd){
 	fd_set fdSET;
-	int result = -1;
+	int amtOfFds = -1;
 	FD_ZERO(&fdSET);
 	FD_SET(clientSockfd, &fdSET);
-	while (result == -1){
-		result = select(clientSockfd+1, &fdSET, NULL, NULL, NULL);
+	while (amtOfFds == -1){
+		amtOfFds = select(clientSockfd+1, &fdSET, NULL, NULL, NULL);
 	}
 
-	if (result > 0){
+	if (amtOfFds > 0){
 		if (FD_ISSET(clientSockfd, &fdSET)){
-
+            
 		}
 	}
 }
 
 void readMessage(int sockfd, char* buffer){
-    if (read(sockfd, buffer, strlen(buffer) < 0)){
+    if (read(sockfd, buffer, strlen(buffer)) < 0){
         perror("Error reading from client");
     }
 }
 
-void sendMessage(int sockfd, char* buffer){
+void writeMessage(int sockfd, char* buffer){
     if (write(sockfd, buffer, strlen(buffer)) < 0){
         perror("Error writing to client");
     }
